@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify, send_file
 import cv2
 import numpy as np
 import io
-from .face_blur import FaceBlurrer  # Import face-blurring logic
+from .face_blur import FaceBlurrer
 
 # Define blueprint
 face_blurring_bp = Blueprint("face_blurring", __name__)
