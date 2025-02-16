@@ -1,19 +1,15 @@
-from flask import Blueprint, request, jsonify, send_from_directory
+from flask import Blueprint, request, jsonify, send_file
 import cv2
 import numpy as np
-import os
+import io
 from .face_blur import FaceBlurrer  # Import face-blurring logic
 
 # Define blueprint
 face_blurring_bp = Blueprint("face_blurring", __name__)
 
 # Load YOLO model
-model_path = os.path.join("projects", "face_blurring", "model", "best.pt")
+model_path = "projects/face_blurring/model/best.pt"
 face_blurrer = FaceBlurrer(model_path)
-
-# Ensure static folder exists to store output images
-STATIC_FOLDER = "static"
-os.makedirs(STATIC_FOLDER, exist_ok=True)
 
 @face_blurring_bp.route("/detect_blur", methods=["POST"])
 def detect_and_blur():
@@ -29,17 +25,11 @@ def detect_and_blur():
     if not face_detected:
         return jsonify({"message": "No faces detected", "blurred": False})
 
-    # Generate unique output filename
-    output_filename = f"blurred_{file.filename}"
-    output_path = os.path.join(STATIC_FOLDER, output_filename)
-    cv2.imwrite(output_path, blurred_image)
+    # Convert processed image to bytes (without saving)
+    _, buffer = cv2.imencode(".jpg", blurred_image)
+    file_bytes = io.BytesIO(buffer)
 
-    return jsonify({
-        "message": "Faces blurred successfully",
-        "blurred": True,
-        "image_url": f"/api/static/{output_filename}"
-    })
-
-@face_blurring_bp.route("/static/<filename>")
-def serve_static(filename):
-    return send_from_directory(STATIC_FOLDER, filename)
+    return send_file(
+        file_bytes,
+        mimetype="image/jpeg"
+    )

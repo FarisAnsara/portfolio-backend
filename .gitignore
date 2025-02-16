@@ -6,4 +6,4 @@ __pycache__/
 model.pt
 static/
 venv/
-start.sh
+test.py
