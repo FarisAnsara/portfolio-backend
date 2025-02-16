@@ -4,7 +4,7 @@ import numpy as np
 from ultralytics import YOLO
 
 class FaceBlurrer:
-    def __init__(self, model_path, conf=0.325, device=0):
+    def __init__(self, model_path, conf=0.325):
         """
         Initializes the FaceBlurrer class.
 
@@ -18,7 +18,7 @@ class FaceBlurrer:
 
         self.model = YOLO(model_path)
         self.conf = conf
-        self.device = device
+        self.device = 'cpu'
 
     def detect_and_blur(self, image):
         """

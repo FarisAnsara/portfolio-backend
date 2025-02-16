@@ -4,13 +4,12 @@ from projects.face_blurring.routes import face_blurring_bp
 import os
 
 STATIC_FOLDER = "static"
-os.makedirs(STATIC_FOLDER, exist_ok=True)  # Ensure static folder exists on startup
+os.makedirs(STATIC_FOLDER, exist_ok=True) 
 
 app = Flask(__name__)
-CORS(app)  # Allow frontend to access API
+CORS(app)
 
-# Register routes
 app.register_blueprint(face_blurring_bp, url_prefix="/api")
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8000)  # Ensures API is accessible
+    app.run(host="0.0.0.0", port=8000)
