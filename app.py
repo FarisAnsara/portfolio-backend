@@ -1,6 +1,10 @@
 from flask import Flask
 from flask_cors import CORS
 from projects.face_blurring.routes import face_blurring_bp
+import os
+
+STATIC_FOLDER = "static"
+os.makedirs(STATIC_FOLDER, exist_ok=True)  # Ensure static folder exists on startup
 
 app = Flask(__name__)
 CORS(app)  # Allow frontend to access API
