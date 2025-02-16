@@ -4,4 +4,6 @@ __pycache__/
 *.pyd
 .env
 model.pt
-static/*
+*.png
+*.jpg
+*.jpeg
