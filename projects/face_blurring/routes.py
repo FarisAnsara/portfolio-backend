@@ -1,13 +1,13 @@
-from flask import Blueprint, request, jsonify, send_file
 import cv2
 import numpy as np
 import io
+import base64
+from flask import Blueprint, request, jsonify
 from .face_blur import FaceBlurrer
 
-# Define blueprint
 face_blurring_bp = Blueprint("face_blurring", __name__)
 
-# Load YOLO model
+# Define model path
 model_path = "projects/face_blurring/model/best.pt"
 face_blurrer = FaceBlurrer(model_path)
 
@@ -25,11 +25,13 @@ def detect_and_blur():
     if not face_detected:
         return jsonify({"message": "No faces detected", "blurred": False})
 
-    # Convert processed image to bytes (without saving)
+    # Encode image as Base64
     _, buffer = cv2.imencode(".jpg", blurred_image)
-    file_bytes = io.BytesIO(buffer)
-
-    return send_file(
-        file_bytes,
-        mimetype="image/jpeg"
-    )
+    base64_image = base64.b64encode(buffer).decode("utf-8")
+    
+    print('hi')
+    return jsonify({
+        "message": "Faces blurred successfully!",
+        "blurred": True,
+        "image_base64": base64_image
+    })
